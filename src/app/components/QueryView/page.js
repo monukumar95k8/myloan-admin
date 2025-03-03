@@ -125,11 +125,11 @@ const QueryView = ({ item }) => {
                         <div className="row" >
                             <div className="col " >
                                 <strong>Whatsapp</strong>
-                                <p>{item.whatsapp}</p>
+                                <p>{item?.whatsapp}</p>
                             </div>
                             <div className="col" >
                                 <strong>Email</strong>
-                                <p>{item.email}</p>
+                                <p>{item?.email}</p>
                             </div>
                         </div>
                         <div className="row" >
