@@ -1,0 +1,281 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+
+.main_container{
+    display: flex;
+    flex-direction: column;
+    
+    width: 80%;
+    border: 2px solid black;
+    padding: 100px;
+    margin-left: 30px;
+}
+.head{
+    margin-top: 60px;
+    
+}
+.head h1{
+    font-size: 40px;
+}
+.line{
+    
+    background-color: black;
+    width: 48%;
+    height: 2px;
+    margin-bottom: 30px;
+    
+}
+.head h2{
+   margin-bottom: 20px;
+   font-size: 30px;
+   text-align: left;
+    
+}
+.paragraph {
+    display: flex;
+    flex-direction: column;
+
+}
+.p1,.p2,.p4{
+    font-size: 29px;
+    color: rgb(22, 22, 22);
+    margin-top: 40px;
+    margin-bottom: 30px;
+}
+.p3{
+    font-size: 29px;
+    color: rgb(22, 22, 22);
+    margin-bottom: 30px;
+}
+.flex{
+    display: flex;
+    gap: 300px;
+    overflow: hidden;
+    
+}
+.h3{
+    margin-bottom: 20px;
+    font-size: 27px;
+    text-align: left;
+}
+.main_para{
+    font-size: 29px;
+    color: rgb(22, 22, 22);
+    margin-top: 20px;
+    margin-bottom: 30px;
+}
+/* Apply to the element where you want the background */
+.element {
+    position: relative;
+  }
+  
+  .element::before {
+    content: '';
+    position: absolute;
+    
+    top: 0;
+    left: 100px;
+    right: 0;
+    bottom: 0;
+    background-image: url("./backgraoung_img2.jpeg");
+    background-size: 800px 400px; 
+    background-repeat: no-repeat;
+   
+    opacity: 0.2;  
+    z-index: -1; 
+  }
+  .table_head {
+    margin-top: 200px;
+    margin-bottom: 40px;
+    display: flex;
+    justify-content: center; /* Center the table horizontally */
+    align-items: center; /* Center the table vertically (optional, depending on container height) */
+    height: 100vh; /* Optional: set the height of the container to make vertical centering effective */
+}
+
+tbody{
+    border-collapse: collapse; /* Ensure borders are collapsed into a single line */
+    border: 1px solid black; /* 1px solid black border around the table */
+}
+
+ th {
+    
+    color: rgb(29, 29, 29);
+    text-align: center;
+    font-size: 29px; /* Center the text inside the table header */
+    font-weight: bold; /* Optional: Make the header text bold */
+}
+
+ td {
+    width: 500px;
+    padding: 10px; 
+    font-size: 25px;/* Add some padding for better readability */
+    border: 2px solid black; 
+    border-radius: 8px;/* 1px solid black border for cells */
+}
+.app_head{
+    margin-bottom: 30px;
+}
+.table_head2{
+    margin-left: 15px;
+    margin-bottom: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Center the table horizontally */
+    
+}
+.emi_head{
+    color: rgb(83, 83, 172);
+    font-size: 25px;
+}
+.scnr{
+    margin-top: 10px;
+    display: flex;
+    gap: 50px;
+}
+.loan_img{
+    margin-top: 30px;
+}
+.signature{
+    margin-top: 200px;
+}
+.date{
+    font-size: 28px;
+}
+.doc_list{
+    margin-top: 200px;
+
+}
+.doc_list h2{
+    font-size: 40px;
+    margin-bottom: 40px;
+}
+.doc_list ul li{
+    margin-left: 70px;
+    font-size: 30px;
+}
+.note{
+    display: flex;
+    flex-direction: column;
+    gap: 50px;
+}
+.note p{
+    font-size: 30px;
+    
+}
+.note button{
+    width: 50%;
+    height: 60px;
+    background-color: red;
+    color: white;
+    border: none;
+    text-align: left;
+    font-size: 26px;
+    padding: 10px;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+.payment-mode{
+    margin-top: 150px;
+    font-size: 29px;
+}
+.intrest_graph{
+    display: flex;
+    flex-direction: column;
+    gap: 60px;
+    align-items: center;
+}
+.intrest_graph h3{
+    margin-top: 300px;
+    font-size: 40px;
+}
+.graph{
+    margin-top: 25px;
+}
+.graph_table{
+  
+    
+   /* Center the table vertically (optional, depending on container height) */
+ 
+}
+.graph_table td {
+  
+    width: 500px;
+    padding: 10px; 
+    font-size: 25px;/* Add some padding for better readability */
+    border: 1px solid black; 
+    
+   /* 1px solid black border for cells */
+}
+.note1{
+    margin-top: 35px;
+    font-size: 28px;
+}
+.loan_head{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 35px;
+    margin-top: 50px;
+    
+
+}
+.loan_line{
+    margin-bottom: 40px;
+    margin-left: 330px;
+    color: black;
+    height: 2px;
+    width: 38%;
+    background-color: black;
+}
+.inner_data{
+    background-color: rgb(62, 170, 104);
+    color: white;
+    font-weight: 800;
+}
+.note2{
+    
+    margin-left: 350px;
+    font-size: 28px;
+}
+.table_head{
+   position: relative
+}
+.table_head::before {
+    content: '';
+    position: absolute;
+    
+    top: 200px;
+    left: 100px;
+    right: 0;
+    bottom: 0;
+    background-image: url("./backgraoung_img2.jpeg");
+    background-size: 800px 400px; 
+    background-repeat: no-repeat;
+   
+    opacity: 0.2;  
+    z-index: -1; 
+  }
+
+.doc_list{
+    position: relative
+ }
+ .doc_list::before {
+     content: '';
+     position: absolute;
+     
+     top: 200px;
+     left: 100px;
+     right: 0;
+     bottom: 0;
+     background-image: url("./backgraoung_img2.jpeg");
+     background-size: 800px 400px; 
+     background-repeat: no-repeat;
+    
+     opacity: 0.2;  
+     z-index: -1; 
+   }
+
+
+

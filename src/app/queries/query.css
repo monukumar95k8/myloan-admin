@@ -1,0 +1,151 @@
+.header_title {
+    background-color: rgb(4, 106, 33);
+    padding: 14px 16px;
+    color: white;
+    text-shadow: 1px 0px 1px rgba(0, 0, 0, 0.6);
+
+}
+
+.header_title h2 {
+    color: white;
+    font-weight: 700;
+    text-shadow: 1px 0px 1px rgba(0, 0, 0, 0.6);
+}
+
+.query_item {
+    display: flex;
+    justify-content: space-around;
+
+}
+
+
+.table-item{
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    width: 100%;
+    justify-content: flex-start;
+}
+
+.query_list {
+    max-width: 100%;
+    overflow-x: auto; /* Ensures horizontal scrolling if content still overflows */
+}
+
+.table {
+    table-layout: fixed; /* Ensures that columns have a fixed width */
+    width: 100%; /* Stretches table to fit container */
+    word-wrap: break-word; /* Allows long words to wrap to the next line */
+    border-collapse: collapse; /* Ensures a clean table layout */
+    font-size: 0.7rem;
+}
+
+.actionBtn{
+    cursor: pointer;
+    font-size: 17px;
+}
+
+.table th,
+.table td {
+    word-wrap: break-word; /* Ensures text wraps within cells */
+    white-space: normal; /* Ensures text breaks to the next line */
+    text-align: left; /* Aligns text to the left */
+    overflow: hidden; /* Ensures content does not overflow */
+}
+
+.table th {
+    max-width: 150px; /* Optional: Adjust column width as needed */
+}
+
+.table td {
+    max-width: 200px; /* Optional: Adjust column width as needed */
+}
+
+
+.container{
+    padding: 12px 5px;
+}
+
+.action_bar{
+    display: flex;
+    width: 100%;
+    align-items: center;
+}
+
+.actions_container{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.actions_container label{
+    font-size: 14px;
+    align-items: center;
+    margin: 0;
+}
+
+.left_sec{
+    display: flex;
+    width: 100%;
+    gap: 10px;
+    align-items: center;
+}
+
+.right_sec{
+    display: flex;
+    width: 100%;
+    gap: 10px;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.sort_container{
+    display: flex;
+    width: 100%;
+    gap: 10px;
+    align-items: center;
+    justify-content: flex-end;
+
+}
+
+label{
+    display: flex;
+    align-items: center;
+    height: 100%;
+}
+
+.actions_container{
+    font-size: 0.8rem;
+}
+
+.actions_container i{
+    cursor: pointer;
+}
+.actions_container label{
+    font-size: 0.8rem;
+}
+
+.actions_container input {
+    height: 30px !important;
+    padding: 0 !important;
+    max-width: 30%;
+}
+
+.actions_container select{
+    height: 32px !important;
+    max-width: 30%;
+    font-size: 18px;
+    padding: 0;
+    padding-left: 10px;
+}
+
+input, select{
+    min-width: 90px;
+}
+
+.selectCheckbox{
+    height: 12px !important;
+    width: 12px !important;
+    font-size: 14px;
+}

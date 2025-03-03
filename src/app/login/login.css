@@ -1,0 +1,34 @@
+.page_Container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+label {
+    margin: 0;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.login_option {
+    display: flex;
+    align-items: center;
+}
+
+input {
+    min-width: 400px;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: center;
+}

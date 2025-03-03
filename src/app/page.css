@@ -1,0 +1,80 @@
+.overview_dashboard {
+    display: flex;
+    flex-direction: column;
+    padding: 15px;
+    width: 100%;
+    justify-content: center;
+    gap: 25px;
+}
+
+
+
+
+
+.card_container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.users_card {
+    min-width: 300px;
+    box-shadow: 0px 0px 3px 1px rgba(0, 0, 0, 0.6);
+    border-radius: 5px;
+    padding: 16px 16px 8px 16px;
+    border-bottom: 3px solid rgb(4, 106, 33);
+}
+
+.users_card h4 {
+    color: rgb(17, 17, 120);
+    font-weight: 600;
+    text-shadow: 1px 0px 1px rgba(0, 0, 0, 0.6);
+}
+
+.user_details {
+    display: flex;
+    width: 100%;
+    justify-content: flex-start;
+    gap: 8px;
+    align-items: center;
+}
+
+.user_details h3 {
+    font-weight: 700;
+    font-size: 21px;
+}
+
+
+.user_details p {
+    font-size: 11px;
+}
+
+.user_box {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.users_card:hover {
+    box-shadow: 0px 0px 5px 2px rgba(0, 0, 0, 0.6);
+
+}
+
+.query_status {
+    margin-top: 15px;
+}
+
+.header_title {
+    background-color: rgb(4, 106, 33);
+    padding: 14px 16px;
+    color: white;
+    text-shadow: 1px 0px 1px rgba(0, 0, 0, 0.6);
+
+}
+
+.header_title h2 {
+    color: white;
+    font-weight: 700;
+    text-shadow: 1px 0px 1px rgba(0, 0, 0, 0.6);
+}

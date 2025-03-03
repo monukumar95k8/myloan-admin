@@ -1,0 +1,25 @@
+{
+  "name": "dhanibackend",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --turbopack",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@sparticuz/chromium": "^132.0.0",
+    "@vercel/blob": "^0.27.1",
+    "axios": "^1.7.9",
+    "firebase": "^11.1.0",
+    "firebase-admin": "^13.0.2",
+    "next": "15.1.4",
+    "nodemailer": "^6.9.16",
+    "puppeteer": "^24.2.0",
+    "puppeteer-core": "^24.2.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-toastify": "^11.0.3"
+  }
+}
