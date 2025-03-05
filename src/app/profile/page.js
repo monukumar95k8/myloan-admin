@@ -22,9 +22,11 @@ const ProfilePage = () => {
     const insuranceFeeRef = useRef(null);
     const holdingFeeRef = useRef(null);
     const nocFeeRef = useRef(null);
+    const upiidRef = useRef(null);
     const [imgUrl, setImgUrl] = useState("");
     const [qrcode, setQrcode] = useState("");
     const [profile, setProfile] = useState(null);
+
 
     const handleSubmit = async (e) => {
 
@@ -45,7 +47,8 @@ const ProfilePage = () => {
                 holdingfee: holdingFeeRef.current.value,
                 nocfee: nocFeeRef.current.value,
                 image: imgUrl !== "" ? imgUrl : profile.image,
-                qrcode: qrcode !== "" ? qrcode : profile.qrcode
+                qrcode: qrcode !== "" ? qrcode : profile.qrcode,
+                upiid: upiidRef.current.value
             };
 
             let colRef = await getDocs(collection(db, "profile"))
@@ -80,8 +83,20 @@ const ProfilePage = () => {
             return { id: a.id, ...a.data() }
         });
         setProfile(data[0])
-        setImgUrl(data[0].image)
-        setQrcode(data[0].qrcode)
+        if (data[0].image) {
+            setImgUrl(data[0].image)
+        }
+        if (data[0].qrcode) {
+            setQrcode(data[0].qrcode)
+        }
+        if (data[0].email) {
+            emailRef.current.value = data[0].email;
+        }
+        if (data[0].mobile) {
+            mobileRef.current.value = data[0].mobile;
+        }
+
+
     }
 
     const handleUpload = async (e) => {
@@ -93,7 +108,7 @@ const ProfilePage = () => {
             formData.append("image", file);
             formData.append("type", "image");
 
-            let response = await fetch("/api/image-upload", {
+            let response = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/image-upload`, {
                 method: "POST",
                 body: formData, // Send form data
             });
@@ -102,10 +117,13 @@ const ProfilePage = () => {
             if (response.ok) {
                 console.log("Upload successful:", result);
                 setImgUrl(result.imgUrl)
+                toast.success("Image upload successful!")
             } else {
+                toast.error("Error uploading image!")
                 console.error("Upload failed:", result);
             }
         } catch (err) {
+            toast.error("Error uploading Image!")
             console.error("Error uploading image:", err);
         }
     };
@@ -273,7 +291,7 @@ const ProfilePage = () => {
                                                     type="text"
                                                     name="username"
                                                     className="form-control"
-                                                    defaultValue={profile.title || "India Dhani Service"}
+                                                    defaultValue={profile.title}
                                                     ref={websiteTitleRef}
                                                 />
                                             </div>
@@ -303,7 +321,7 @@ const ProfilePage = () => {
                                                 <input
                                                     name="email_id"
                                                     className="form-control"
-                                                    defaultValue={profile.email || "support@indiadhaniservice.co.in"}
+                                                    defaultValue={profile.email}
                                                     type="text"
                                                     placeholder=""
                                                     ref={emailRef}
@@ -317,7 +335,7 @@ const ProfilePage = () => {
                                                     type="text"
                                                     name="mobile"
                                                     className="form-control"
-                                                    defaultValue={profile.mobile || 8981356338}
+                                                    defaultValue={profile.mobile}
                                                     ref={mobileRef}
                                                 />
                                             </div>
@@ -329,7 +347,7 @@ const ProfilePage = () => {
                                                     type="text"
                                                     name="website"
                                                     className="form-control"
-                                                    defaultValue="Dhani Finance Ltd"
+                                                    defaultValue={profile.title}
                                                     ref={websiteTitleRef}
                                                 />
                                             </div>
@@ -341,7 +359,7 @@ const ProfilePage = () => {
                                                     type="text"
                                                     name="annualInterestRate"
                                                     className="form-control"
-                                                    defaultValue="6.99"
+                                                    defaultValue={profile.interestrate}
                                                     ref={interestRateRef}
                                                 />
                                             </div>
@@ -353,7 +371,7 @@ const ProfilePage = () => {
                                                     type="text"
                                                     name="bank_name"
                                                     className="form-control"
-                                                    defaultValue="Punjab & Sind Bank"
+                                                    defaultValue={profile.bankname}
                                                     ref={bankNameRef}
                                                 />
                                             </div>
@@ -377,7 +395,7 @@ const ProfilePage = () => {
                                                     type="text"
                                                     name="account"
                                                     className="form-control"
-                                                    defaultValue={15951000000932}
+                                                    defaultValue={profile.accountnumber}
                                                     ref={accountNumberRef}
                                                 />
                                             </div>
@@ -389,7 +407,7 @@ const ProfilePage = () => {
                                                     type="text"
                                                     name="holder_name"
                                                     className="form-control"
-                                                    defaultValue="Dhani Finance Limited"
+                                                    defaultValue={profile.accountholder}
                                                     ref={accountHolderRef}
                                                 />
                                             </div>
@@ -401,7 +419,8 @@ const ProfilePage = () => {
                                                     type="text"
                                                     name="google_pay"
                                                     className="form-control"
-                                                    defaultValue=""
+                                                    ref={upiidRef}
+                                                    defaultValue={profile.upiid}
                                                 />
                                             </div>
                                         </div>
