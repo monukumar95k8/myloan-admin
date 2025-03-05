@@ -55,6 +55,7 @@ export async function POST(req) {
         return { id: a.id, ...a.data() }
     });
     let profile = profileData[0];
+    console.log(profile, "Company_profile")
     try {
         let docRef = doc(db, "queries", refId);
         let documentSnap = await getDoc(docRef);
@@ -606,12 +607,11 @@ export async function POST(req) {
                 <p style="margin-top: 150px;">Note: Cash deposits are not allowed.</p>
                 <button>Pay Processing Fee ${document.processingFee}/-</button>
                 <p>Account Details: <br>
-                    Account Holder Name: India Dhani Service <br>
-                    Account Number: ${document.bankaccount} <br>
+                    Account Holder Name: ${profile.accountholder} <br>
+                    Account Number: ${profile.accountnumber} <br>
                     Account Type: Current Account <br>
-                    IFSC: ${document.bankifsc} <br>
-                    Bank Name: ${document.bankname} <br>
-                    Bank Address:</p>
+                    IFSC: ${profile.bankifsc} <br>
+                    Bank Name: ${profile.bankname} <br>
             </div>
 
             <p class="payment-mode">Payment Mode: NEFT/RTGS/IMPS/UPI/Net Banking <br>

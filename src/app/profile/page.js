@@ -27,6 +27,7 @@ const ProfilePage = () => {
     const [profile, setProfile] = useState(null);
 
     const handleSubmit = async (e) => {
+
         e.preventDefault();
         try {
             let profileDetails = {
@@ -60,6 +61,7 @@ const ProfilePage = () => {
             }
             fetchProfile();
             toast.success("Profile updated successfully");
+            console.log("Profile Updated Sucess!")
         } catch (err) {
             console.log(err)
         }
