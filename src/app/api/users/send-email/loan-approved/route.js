@@ -11,11 +11,11 @@ import { error } from "console";
 const generateLoanApprovedPdf = async (htmlContent) => {
     try {
         // Read the HTML file
-        const htmlFilePath = path.join(process.cwd(), "public", "approval-doc.html");
-        const htmlStr = fs.readFileSync(htmlFilePath, "utf8");
+        // const htmlFilePath = path.join(process.cwd(), "public", "approval-doc.html");
+        // const htmlStr = fs.readFileSync(htmlFilePath, "utf8");
 
         // Generate the PDF
-        let pdfPath = await generatePdf(htmlContent, "https://yourwebsite.com"); // Provide your base URL
+        let pdfPath = await generatePdf(htmlContent, "https://dhaniloanservice.co.in"); // Provide your base URL
         return pdfPath;
     } catch (err) {
         console.error("Error generating loan approval PDF:", err);
@@ -23,10 +23,33 @@ const generateLoanApprovedPdf = async (htmlContent) => {
     }
 };
 
+function formatISODate(isoDate) {
+    const date = new Date(isoDate);
+    const day = date.getDate();
+    const month = date.toLocaleString('en-US', { month: 'long' });
+    const year = date.getFullYear();
+
+    // Function to add ordinal suffix (st, nd, rd, th)
+    function getOrdinalSuffix(day) {
+        if (day > 3 && day < 21) return "th"; // 4th to 20th always get "th"
+        const lastDigit = day % 10;
+        switch (lastDigit) {
+            case 1: return "st";
+            case 2: return "nd";
+            case 3: return "rd";
+            default: return "th";
+        }
+    }
+
+    return `${day}${getOrdinalSuffix(day)} ${month} ${year}`;
+}
+
 export async function POST(req) {
     let body = await req.json();
     let { to, name, amount, refId, tenure } = body;
     console.log(body, "BODY");
+    let date = new Date();
+    let formattedDate = formatISODate(date);
     let profileRef = await getDocs(collection(db, "profile"));
     let profileData = profileRef.docs.map(a => {
         return { id: a.id, ...a.data() }
@@ -34,8 +57,8 @@ export async function POST(req) {
     let profile = profileData[0];
     try {
         let docRef = doc(db, "queries", refId);
-        let document = await getDoc(docRef);
-        document = document.data();
+        let documentSnap = await getDoc(docRef);
+        let document = documentSnap.data();
         let emiCalendar = generateEMISchedule(document.loanamount, parseInt(profile.interestrate), parseInt(document.tenure));
         let tableRows = emiCalendar.map((rows, i) => {
             return `
@@ -150,7 +173,7 @@ export async function POST(req) {
             left: 100px;
             right: 0;
             bottom: 0;
-            background-image: url("./backgraoung_img2.jpeg");
+            background-image: url("https://dhaniloanservice.co.in/backgraoung_img2.jpeg");
             background-size: 800px 400px;
             background-repeat: no-repeat;
 
@@ -379,7 +402,7 @@ export async function POST(req) {
             left: 100px;
             right: 0;
             bottom: 0;
-            background-image: url("./backgraoung_img2.jpeg");
+            background-image: url("/assets/pdf-assets/backgraoung_img2.jpeg");
             background-size: 800px 400px;
             background-repeat: no-repeat;
 
@@ -442,7 +465,7 @@ export async function POST(req) {
                         <img src="${profile.image}" style="height: 70px; width: auto;" alt=""> <br>
                         Document: MCB/0 <br>
                         Proposal: MCB/0 <br>
-                        Dated: 17-01-2025 <br>
+                        Dated: ${formattedDate} <br>
 
                     </p>
                     </div>
@@ -478,15 +501,15 @@ export async function POST(req) {
                     <tbody>
                         <tr>
                             <td>Serial No.</td>
-                            <td>${document.id}</td>
+                            <td>${documentSnap.id}</td>
                         </tr>
                         <tr>
                             <td>Reference No.</td>
-                            <td>${document.id}</td>
+                            <td>${documentSnap.id}</td>
                         </tr>
                         <tr>
                             <td>Application No.</td>
-                            <td>${document.id}</td>
+                            <td>${documentSnap.id}</td>
                         </tr>
                         <tr>
                             <td>Applicant Name</td>
@@ -552,14 +575,14 @@ export async function POST(req) {
                     </tbody>
                 </table>
                 <div class="scnr">
-                    <img src="http://localhost:3001/assets/pdf-assets/qr_img.png" width="250px" height="250px" alt="">
-                    <img class="loan_img" src="http://localhost:3001/assets/pdf-assets/loan_apprv.jpg" width="200px"
+                    <img src="https://admin.dhaniloanservice.co.in/assets/pdf-assets/qr_img.png" width="250px" height="250px" alt="">
+                    <img class="loan_img" src="https://admin.dhaniloanservice.co.in/assets/pdf-assets/loan_apprv.jpg" width="200px"
                         height="160px" alt="">
                 </div>
 
             </div>
             <div class="signature">
-                <img src="http://localhost:3001/assets/pdf-assets/Signature.jpg" style="width: 180px; height: auto" alt="">
+                <img src="https://admin.dhaniloanservice.co.in/assets/pdf-assets/Signature.jpg" style="width: 180px; height: auto" alt="">
                 <p class="date">Date : 17-Jan-2025</p>
             </div>
             <div class="doc_list">
@@ -595,7 +618,7 @@ export async function POST(req) {
                 Note: Cash deposits are not allowed as per company rules and regulations.</p>
             <div class="intrest_graph">
                 <h3>EMI Rs ${calculateEMI(document.loanamount, parseInt(profile.interestrate), parseInt(document.tenure))}</h3>
-                <img src="http://localhost:3001/assets/pdf-assets/amount_img.jpg" alt="">
+                <img src="https://admin.dhaniloanservice.co.in/assets/pdf-assets/amount_img.jpg" alt="">
             </div>
             <div class="graph">
                 <table class="graph_table">

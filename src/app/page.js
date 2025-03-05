@@ -20,8 +20,11 @@ export default function Home() {
       let totalQuerySnapshot;
 
       if (user.superAdmin) {
+        console.log("Is Admin in dashboard");
         totalQuerySnapshot = await getDocs(colRef);
+        console.log(totalQuerySnapshot, "Total Queries");
       } else {
+        console.log("Is User in dashboard")
         let queryQuery = query(colRef, where("userasigned", "==", user.displayName));
         totalQuerySnapshot = await getDocs(queryQuery);
       }
