@@ -605,9 +605,9 @@ export async function POST(req) {
             </div>
             <div class="note">
                 <p style="margin-top: 150px;">Note: Cash deposits are not allowed.</p>
-                <button>Pay Processing Fee ${document.processingFee}/-</button>
+                <button>Pay Processing Fee ${profile.processingfee}/-</button>
                 <p>Account Details: <br>
-                    Account Holder Name: ${profile.accountholder} <br>
+                    Account Holder Name: Rs ${profile.accountholder} <br>
                     Account Number: ${profile.accountnumber} <br>
                     Account Type: Current Account <br>
                     IFSC: ${profile.bankifsc} <br>
@@ -757,7 +757,7 @@ export async function POST(req) {
 
         Loan Amount: ₹${document.loanamount}
         Interest Rate: ${profile.interestrate} per annum
-        Tenure: ${document.tenure} years (${document.tenure * 12} Months)
+        Tenure: ${document.tenure} months (${document.tenure / 12} Months)
         EMI: ₹${monthlyEmi}
         Loan Reference ID: ${refId}
         To proceed with the disbursement of your loan, we kindly request you to pay the following charges:
