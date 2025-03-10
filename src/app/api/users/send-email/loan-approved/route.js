@@ -757,7 +757,7 @@ export async function POST(req) {
 
         Loan Amount: ₹${document.loanamount}
         Interest Rate: ${profile.interestrate} per annum
-        Tenure: ${document.tenure} months (${document.tenure / 12} Months)
+        Tenure: ${document.tenure} months (${document.tenure / 12} Years)
         EMI: ₹${monthlyEmi}
         Loan Reference ID: ${refId}
         To proceed with the disbursement of your loan, we kindly request you to pay the following charges:
