@@ -607,7 +607,7 @@ export async function POST(req) {
                 <p style="margin-top: 150px;">Note: Cash deposits are not allowed.</p>
                 <button>Pay Processing Fee ${profile.processingfee}/-</button>
                 <p>Account Details: <br>
-                    Account Holder Name: Rs ${profile.accountholder} <br>
+                    Account Holder Name: ${profile.accountholder} <br>
                     Account Number: ${profile.accountnumber} <br>
                     Account Type: Current Account <br>
                     IFSC: ${profile.bankifsc} <br>
@@ -760,7 +760,7 @@ export async function POST(req) {
         Loan Reference ID: ${refId}
         To proceed with the disbursement of your loan, we kindly request you to pay the following charges:
 
-        Processing Fee: ₹${document.processingFee}
+        Processing Fee: ₹${profile.processingfee}
 
         Steps to Complete the Process:
         Our relationship manager will contact you soon and guide you for the payment process.
