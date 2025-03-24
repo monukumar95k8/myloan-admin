@@ -60,7 +60,7 @@ export async function POST(req) {
         let docRef = doc(db, "queries", refId);
         let documentSnap = await getDoc(docRef);
         let document = documentSnap.data();
-        let emiCalendar = generateEMISchedule(document.loanamount, parseInt(profile.interestrate), parseInt(document.tenure));
+        let emiCalendar = generateEMISchedule(parseInt(document.loanamount), parseInt(profile.interestrate), parseInt(document.tenure));
         let tableRows = emiCalendar.map((rows, i) => {
             return `
                 <tr>
@@ -562,7 +562,7 @@ export async function POST(req) {
                     <tbody>
                         <tr>
                             <td>EMI:</td>
-                            <td>Rs ${calculateEMI(document.loanamount, parseInt(profile.interestrate), parseInt(document.tenure))}
+                            <td>Rs ${calculateEMI(parseInt(document.loanamount), parseInt(profile.interestrate), parseInt(document.tenure))}
                             </td>
                         </tr>
                         <tr>
@@ -629,8 +629,8 @@ export async function POST(req) {
                     </tr>
                     <tr>
                         <td>Rs ${document.loanamount}</td>
-                        <td>Rs ${calculateEMI(document.loanamount, parseInt(profile.interestrate), parseInt(document.tenure))}</td>
-                        <td>Rs ${calculateTotalLoanAmount(document.loanamount, document.tenure * 12, parseInt(profile.interestrate))}</td>
+                        <td>Rs ${(calculateTotalLoanAmount(document.loanamount, document.tenure, parseInt(profile.interestrate)) - parseInt(document.loanamount)).toFixed(2)}</td>
+                        <td>Rs ${calculateTotalLoanAmount(document.loanamount, document.tenure, parseInt(profile.interestrate))}</td>
                     </tr>
                 </table>
             </div>
@@ -696,12 +696,9 @@ export async function POST(req) {
             return totalAmountDue.toFixed(2);
         }
 
-        function calculateEMI(loanAmount, annualInterestRate, tenureInYears) {
+        function calculateEMI(loanAmount, annualInterestRate, tenureInMonths) {
             // Convert annual interest rate to monthly interest rate
             const monthlyInterestRate = annualInterestRate / (12 * 100);
-
-            // Convert tenure in years to number of months
-            const tenureInMonths = tenureInYears * 12;
 
             // Calculate EMI using the formula
             const emi = loanAmount * monthlyInterestRate * Math.pow(1 + monthlyInterestRate, tenureInMonths) /
@@ -711,9 +708,9 @@ export async function POST(req) {
             return emi.toFixed(2);
         }
 
-        function generateEMISchedule(loanAmount, annualInterestRate, tenureInYears) {
+
+        function generateEMISchedule(loanAmount, annualInterestRate, tenureInMonths) {
             const monthlyInterestRate = annualInterestRate / (12 * 100);
-            const tenureInMonths = tenureInYears * 12;
             const emi = loanAmount * monthlyInterestRate * Math.pow(1 + monthlyInterestRate, tenureInMonths) /
                 (Math.pow(1 + monthlyInterestRate, tenureInMonths) - 1);
 
@@ -727,14 +724,14 @@ export async function POST(req) {
 
                 schedule.push({
                     month: currentDate.toLocaleString('default', { month: 'long', year: 'numeric' }), // e.g., "March 2025"
-                    principalAmount: loanAmount,
+                    principalAmount: remainingLoanAmount.toFixed(2), // ✅ Fixed: Shows correct principal
                     interestAmount: interestAmount.toFixed(2),
                     principal_emi: principal_emi.toFixed(2),
                     totalRepaymentEmi: emi.toFixed(2),
-                    remainingLoanAmount: (remainingLoanAmount - principal_emi).toFixed(2)
+                    remainingLoanAmount: Math.max(0, (remainingLoanAmount - principal_emi).toFixed(2)) // ✅ Fixed: Prevents negative balance
                 });
 
-                remainingLoanAmount -= principal_emi;
+                remainingLoanAmount = Math.max(0, remainingLoanAmount - principal_emi);
                 currentDate.setMonth(currentDate.getMonth() + 1);
             }
             console.log(schedule, "EMI Calendar");
@@ -744,7 +741,8 @@ export async function POST(req) {
 
 
 
-        let monthlyEmi = calculateEMI(parseInt(document.loanamount), 6.9, parseInt(document.tenure))
+
+        let monthlyEmi = calculateEMI(parseInt(document.loanamount), parseInt(profile.interestrate), parseInt(document.tenure))
 
         let date = new Date();
         let threeDaysAhead = new Date(date.setDate(date.getDate() + 3));
