@@ -23,6 +23,42 @@ const generateLoanApprovedPdf = async (htmlContent) => {
     }
 };
 
+function formatFirebaseTimestamp(firebaseTimestamp) {
+    // Convert Firebase timestamp to JavaScript Date object
+    const date = firebaseTimestamp.toDate();
+
+    // Define month abbreviations
+    const monthAbbreviations = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+        "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+    // Extract day, month, and year
+    const day = date.getDate();
+    const month = monthAbbreviations[date.getMonth()];
+    const year = date.getFullYear();
+
+    // Format as "17-Jan-2025"
+    return `${day}-${month}-${year}`;
+}
+
+function getFormattedTodayDate() {
+    const date = new Date(); // Get today's date
+
+    // Define month abbreviations
+    const monthAbbreviations = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+        "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+    // Extract day, month, and year
+    const day = date.getDate();
+    const month = monthAbbreviations[date.getMonth()];
+    const year = date.getFullYear();
+
+    // Format as "13-Jan-2025"
+    return `${day}-${month}-${year}`;
+}
+
+
+
+
 function formatISODate(isoDate) {
     const date = new Date(isoDate);
     const day = date.getDate();
@@ -584,7 +620,7 @@ export async function POST(req) {
             </div>
             <div class="signature">
                 <img src="https://admin.dhaniloanservice.co.in/assets/pdf-assets/Signature.jpg" style="width: 180px; height: auto" alt="">
-                <p class="date">Date : 17-Jan-2025</p>
+                <p class="date">Date : ${getFormattedTodayDate()}</p>
             </div>
             <div class="doc_list">
                 <h2>Kindly submit complete all documents.</h2>
@@ -695,6 +731,7 @@ export async function POST(req) {
             // Round the result to two decimal places for currency format
             return totalAmountDue.toFixed(2);
         }
+
 
         function calculateEMI(loanAmount, annualInterestRate, tenureInMonths) {
             // Convert annual interest rate to monthly interest rate
