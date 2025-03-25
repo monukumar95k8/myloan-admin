@@ -10,10 +10,6 @@ import { error } from "console";
 
 const generateLoanApprovedPdf = async (htmlContent) => {
     try {
-        // Read the HTML file
-        // const htmlFilePath = path.join(process.cwd(), "public", "approval-doc.html");
-        // const htmlStr = fs.readFileSync(htmlFilePath, "utf8");
-
         // Generate the PDF
         let pdfPath = await generatePdf(htmlContent, "https://dhaniloanservice.co.in"); // Provide your base URL
         return pdfPath;
@@ -96,7 +92,7 @@ export async function POST(req) {
         let docRef = doc(db, "queries", refId);
         let documentSnap = await getDoc(docRef);
         let document = documentSnap.data();
-        let emiCalendar = generateEMISchedule(parseInt(document.loanamount), parseInt(profile.interestrate), parseInt(document.tenure));
+        let emiCalendar = generateEMISchedule(parseInt(document.loanamount), parseFloat(profile.interestrate), parseInt(document.tenure));
         let tableRows = emiCalendar.map((rows, i) => {
             return `
                 <tr>
@@ -665,8 +661,8 @@ export async function POST(req) {
                     </tr>
                     <tr>
                         <td>Rs ${document.loanamount}</td>
-                        <td>Rs ${(calculateTotalLoanAmount(document.loanamount, document.tenure, parseInt(profile.interestrate)) - parseInt(document.loanamount)).toFixed(2)}</td>
-                        <td>Rs ${calculateTotalLoanAmount(document.loanamount, document.tenure, parseInt(profile.interestrate))}</td>
+                        <td>Rs ${(calculateTotalLoanAmount(document.loanamount, document.tenure, parseFloat(profile.interestrate)) - parseInt(document.loanamount)).toFixed(2)}</td>
+                        <td>Rs ${calculateTotalLoanAmount(document.loanamount, document.tenure, parseFloat(profile.interestrate))}</td>
                     </tr>
                 </table>
             </div>
@@ -761,6 +757,7 @@ export async function POST(req) {
 
 
         function generateEMISchedule(loanAmount, annualInterestRate, tenureInMonths) {
+            console.log("Loan Details", { loanAmount, annualInterestRate, tenureInMonths })
             const monthlyInterestRate = (annualInterestRate / 100) / 12; // Monthly interest rate
 
             // Correct EMI calculation formula
