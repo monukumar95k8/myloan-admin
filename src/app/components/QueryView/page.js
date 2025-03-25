@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import "./querypopup.css";
 import { toast } from "react-toastify";
 const QueryView = ({ item }) => {
+    const [approvalBtnText, setApprovalBtnText] = useState("Approval");
+    const [approvalDownloadBtn, setApprovalDownloadBtn] = useState("Approval");
 
     const closePopup = () => {
         document.getElementById("queryContainer").style.display = "none"
@@ -11,13 +13,17 @@ const QueryView = ({ item }) => {
     useEffect(() => { console.log(item, "Item") }, [])
 
     const sendProcessing = async (email, refID) => {
+        setApprovalBtnText("Sending...")
         console.log({ email, refID }, "Email Details")
         try {
             await fetch("/api/users/send-email/loan-approved", { method: "POST", body: JSON.stringify({ refId: refID, to: email }), headers: { 'Contnet-Type': "application/json" } });
-            toast.success("Processing email sent successfuly!")
+            toast.success("Processing email sent successfuly!");
+            setApprovalBtnText("Sent");
         } catch (err) {
+            setApprovalBtnText("Approval");
             console.log("Error in sending processing email!", err)
-        }
+        };
+        setTimeout(() => setApprovalBtnText("Approval"), 2000)
     }
 
     const appStatusList = [
@@ -78,6 +84,7 @@ const QueryView = ({ item }) => {
     const handleDownload = async (type, refID) => {
         try {
             if (type === "approval") {
+                setApprovalDownloadBtn("Downloading")
                 const response = await fetch(`/api/download/approval/${refID}`);
 
                 if (!response.ok) throw new Error("Failed to download document");
@@ -98,11 +105,15 @@ const QueryView = ({ item }) => {
                 window.URL.revokeObjectURL(url);
 
                 toast.success("Document Downloaded Successfully!");
+                setApprovalDownloadBtn("Downloaded");
             }
         } catch (err) {
+            setApprovalDownloadBtn("Approval");
             console.log(err);
             toast.error("Unable to download document.");
-        }
+        };
+
+        setTimeout(() => setApprovalDownloadBtn("Approval"), 2000)
     };
 
 
@@ -218,7 +229,7 @@ const QueryView = ({ item }) => {
                     <div className="docs_options" >
                         <p>Download PDF:</p>
                         <div className="options">
-                            <label onClick={() => handleDownload("approval", item.id)} className="processing" >Approval</label>
+                            <label onClick={() => handleDownload("approval", item.id)} className="processing" >{approvalDownloadBtn}</label>
                             <label className="insurance" >Insurance</label>
                             <label className="noc" >NOC</label>
                             <label className="holding" >Holding</label>
@@ -228,7 +239,7 @@ const QueryView = ({ item }) => {
                     <div className="email_options" >
                         <p>Send Mail:</p>
                         <div className="options">
-                            <label onClick={() => sendProcessing(item.email, item.id)} className="processing" >Approval</label>
+                            <label onClick={() => sendProcessing(item.email, item.id)} className="processing" >{approvalBtnText}</label>
                             <label onClick={() => sendInsurance(item.email, item.id)} className="insurance" >Insurance</label>
                             <label onClick={() => sendNoc(item.email, item.id)} className="noc" >NOC</label>
                             <label onClick={() => senHolding(item.email, item.id)} className="holding" >Holding</label>
