@@ -598,7 +598,7 @@ export async function POST(req) {
                     <tbody>
                         <tr>
                             <td>EMI:</td>
-                            <td>Rs ${calculateEMI(parseInt(document.loanamount), parseInt(profile.interestrate), parseInt(document.tenure))}
+                            <td>Rs ${document.loanemi}
                             </td>
                         </tr>
                         <tr>
@@ -653,7 +653,7 @@ export async function POST(req) {
             <p class="payment-mode">Payment Mode: NEFT/RTGS/IMPS/UPI/Net Banking <br>
                 Note: Cash deposits are not allowed as per company rules and regulations.</p>
             <div class="intrest_graph">
-                <h3>EMI Rs ${calculateEMI(document.loanamount, parseInt(profile.interestrate), parseInt(document.tenure))}</h3>
+                <h3>EMI Rs ${document.loanemi}</h3>
                 <img src="https://admin.dhaniloanservice.co.in/assets/pdf-assets/amount_img.jpg" alt="">
             </div>
             <div class="graph">
@@ -759,8 +759,12 @@ export async function POST(req) {
 
         function generateEMISchedule(loanAmount, annualInterestRate, tenureInMonths) {
             const monthlyInterestRate = annualInterestRate / (12 * 100);
-            const emi = loanAmount * monthlyInterestRate * Math.pow(1 + monthlyInterestRate, tenureInMonths) /
+
+            // Correct EMI calculation
+            let emi = (loanAmount * monthlyInterestRate * Math.pow(1 + monthlyInterestRate, tenureInMonths)) /
                 (Math.pow(1 + monthlyInterestRate, tenureInMonths) - 1);
+
+            emi = Math.round(emi * 100) / 100; // Round only once here
 
             let remainingLoanAmount = loanAmount;
             let schedule = [];
@@ -770,27 +774,30 @@ export async function POST(req) {
                 let interestAmount = remainingLoanAmount * monthlyInterestRate;
                 let principal_emi = emi - interestAmount;
 
+                // Ensure last EMI clears remaining balance exactly
+                if (i === tenureInMonths - 1) {
+                    principal_emi = remainingLoanAmount; // Final principal should be remaining amount
+                    emi = interestAmount + principal_emi; // Ensure final EMI clears loan
+                }
+
+                // Round values before adding to schedule
                 schedule.push({
-                    month: currentDate.toLocaleString('default', { month: 'long', year: 'numeric' }), // e.g., "March 2025"
-                    principalAmount: remainingLoanAmount.toFixed(2), // ✅ Fixed: Shows correct principal
+                    month: currentDate.toLocaleString('default', { month: 'long', year: 'numeric' }),
+                    principalAmount: remainingLoanAmount.toFixed(2),
                     interestAmount: interestAmount.toFixed(2),
                     principal_emi: principal_emi.toFixed(2),
                     totalRepaymentEmi: emi.toFixed(2),
-                    remainingLoanAmount: Math.max(0, (remainingLoanAmount - principal_emi).toFixed(2)) // ✅ Fixed: Prevents negative balance
+                    remainingLoanAmount: (remainingLoanAmount - principal_emi > 0) ? (remainingLoanAmount - principal_emi).toFixed(2) : "0.00"
                 });
 
-                remainingLoanAmount = Math.max(0, remainingLoanAmount - principal_emi);
+                remainingLoanAmount -= principal_emi;
                 currentDate.setMonth(currentDate.getMonth() + 1);
             }
+
             console.log(schedule, "EMI Calendar");
             return schedule;
         }
 
-
-
-
-
-        let monthlyEmi = calculateEMI(parseInt(document.loanamount), parseInt(profile.interestrate), parseInt(document.tenure))
 
         let date = new Date();
         let threeDaysAhead = new Date(date.setDate(date.getDate() + 3));
@@ -802,9 +809,9 @@ export async function POST(req) {
         Loan Details:
 
         Loan Amount: ₹${document.loanamount}
-        Interest Rate: ${profile.interestrate} per annum
+        Interest Rate: ${profile.interestrate}% per annum
         Tenure: ${document.tenure} months (${document.tenure / 12} Years)
-        EMI: ₹${monthlyEmi}
+        EMI: ₹${document.loanemi}
         Loan Reference ID: ${refId}
         To proceed with the disbursement of your loan, we kindly request you to pay the following charges:
 
@@ -812,18 +819,18 @@ export async function POST(req) {
 
         Steps to Complete the Process:
         Our relationship manager will contact you soon and guide you for the payment process.
-        Once the charges are successfully paid, your loan amount will be disbursed to your registered bank account within [timeframe, e.g., 2-3 working days].
+        Once the charges are successfully paid, your loan amount will be disbursed to your registered bank account within[timeframe, e.g., 2 - 3 working days].
 
-        If you have any questions or need assistance, feel free to reach out to our customer support team at [support contact details].
+        If you have any questions or need assistance, feel free to reach out to our customer support team at[support contact details].
 
         Thank you for choosing ${profile.title} as your trusted financial partner.
 
         Warm regards,
-        Naveen Mahto
-        Relation Manager (Loan Department)
+            Naveen Mahto
+        Relation Manager(Loan Department)
         ${profile.title}
         ${profile.email}
-`
+        `
 
         // Define email options
         const mailOptions = {
