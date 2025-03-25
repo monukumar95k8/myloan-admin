@@ -735,15 +735,26 @@ export async function POST(req) {
 
         function calculateEMI(loanAmount, annualInterestRate, tenureInMonths) {
             // Convert annual interest rate to monthly interest rate
-            const monthlyInterestRate = annualInterestRate / (12 * 100);
+            const monthlyInterestRate = (annualInterestRate / 100) / 12;
 
-            // Calculate EMI using the formula
-            const emi = loanAmount * monthlyInterestRate * Math.pow(1 + monthlyInterestRate, tenureInMonths) /
-                (Math.pow(1 + monthlyInterestRate, tenureInMonths) - 1);
+            // Calculate EMI using a precise formula
+            const numerator = loanAmount * monthlyInterestRate * Math.pow(1 + monthlyInterestRate, tenureInMonths);
+            const denominator = Math.pow(1 + monthlyInterestRate, tenureInMonths) - 1;
 
-            // Return the EMI rounded to 2 decimal places
+            const emi = numerator / denominator;
+
+            // Logging values for debugging
+            console.log(`Loan Amount: ${loanAmount}`);
+            console.log(`Annual Interest Rate: ${annualInterestRate}%`);
+            console.log(`Monthly Interest Rate: ${monthlyInterestRate}`);
+            console.log(`Tenure (Months): ${tenureInMonths}`);
+            console.log(`Calculated EMI: ${emi}`);
+
+            // Return EMI rounded to 2 decimal places
             return emi.toFixed(2);
         }
+
+
 
 
         function generateEMISchedule(loanAmount, annualInterestRate, tenureInMonths) {
