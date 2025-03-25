@@ -104,7 +104,7 @@ export async function POST(req) {
                     <td>${rows.interestAmount} </td>
                     <td>${rows.principalAmount} </td>
                     <td>${rows.principal_emi} </td>
-                    <td>${rows.totalRepaymentEmi}</td>
+                    <td>${rows.monthlyRepaymentAmount}</td>
                     <td>${rows.remainingLoanAmount}</td>
                 </tr>
             `;
@@ -722,14 +722,17 @@ export async function POST(req) {
         });
 
         function calculateTotalLoanAmount(loanAmount, tenure, annualInterestRate) {
-            // Convert annual interest rate to monthly interest rate (in decimal)
+            // Convert annual interest rate to monthly interest rate
             const monthlyInterestRate = annualInterestRate / 100 / 12;
 
-            // Calculate the total loan amount due using the formula for compound interest
-            const totalAmountDue = loanAmount * Math.pow(1 + monthlyInterestRate, tenure);
+            // Calculate EMI using the standard loan EMI formula
+            const emi = (loanAmount * monthlyInterestRate * Math.pow(1 + monthlyInterestRate, tenure)) /
+                (Math.pow(1 + monthlyInterestRate, tenure) - 1);
 
-            // Round the result to two decimal places for currency format
-            return totalAmountDue.toFixed(2);
+            // Total amount repaid over the loan tenure
+            const totalAmountDue = emi * tenure;
+
+            return totalAmountDue.toFixed(2); // Return total repayment amount rounded to 2 decimal places
         }
 
 
@@ -758,36 +761,40 @@ export async function POST(req) {
 
 
         function generateEMISchedule(loanAmount, annualInterestRate, tenureInMonths) {
-            const monthlyInterestRate = annualInterestRate / (12 * 100);
+            const monthlyInterestRate = (annualInterestRate / 100) / 12; // Monthly interest rate
 
-            // Correct EMI calculation
+            // Correct EMI calculation formula
             let emi = (loanAmount * monthlyInterestRate * Math.pow(1 + monthlyInterestRate, tenureInMonths)) /
                 (Math.pow(1 + monthlyInterestRate, tenureInMonths) - 1);
 
-            emi = Math.round(emi * 100) / 100; // Round only once here
+            emi = parseFloat(emi.toFixed(2)); // Round EMI correctly
 
             let remainingLoanAmount = loanAmount;
             let schedule = [];
             let currentDate = new Date();
 
             for (let i = 0; i < tenureInMonths; i++) {
-                let interestAmount = remainingLoanAmount * monthlyInterestRate;
+                let interestAmount = (remainingLoanAmount * monthlyInterestRate);
                 let principal_emi = emi - interestAmount;
 
                 // Ensure last EMI clears remaining balance exactly
                 if (i === tenureInMonths - 1) {
-                    principal_emi = remainingLoanAmount; // Final principal should be remaining amount
-                    emi = interestAmount + principal_emi; // Ensure final EMI clears loan
+                    principal_emi = remainingLoanAmount;
+                    emi = interestAmount + principal_emi; // Adjust last EMI
                 }
 
-                // Round values before adding to schedule
+                // Proper rounding AFTER calculation
+                interestAmount = parseFloat(interestAmount.toFixed(2));
+                principal_emi = parseFloat(principal_emi.toFixed(2));
+
                 schedule.push({
                     month: currentDate.toLocaleString('default', { month: 'long', year: 'numeric' }),
                     principalAmount: remainingLoanAmount.toFixed(2),
                     interestAmount: interestAmount.toFixed(2),
                     principal_emi: principal_emi.toFixed(2),
-                    totalRepaymentEmi: emi.toFixed(2),
-                    remainingLoanAmount: (remainingLoanAmount - principal_emi > 0) ? (remainingLoanAmount - principal_emi).toFixed(2) : "0.00"
+                    monthlyRepaymentAmount: emi.toFixed(2),
+                    remainingLoanAmount: (remainingLoanAmount - principal_emi > 0) ?
+                        (remainingLoanAmount - principal_emi).toFixed(2) : "0.00"
                 });
 
                 remainingLoanAmount -= principal_emi;
@@ -797,6 +804,9 @@ export async function POST(req) {
             console.log(schedule, "EMI Calendar");
             return schedule;
         }
+
+
+
 
 
         let date = new Date();
